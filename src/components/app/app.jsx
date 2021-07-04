@@ -17,9 +17,9 @@ export default class App extends Component {
     this.state = {
       taskData: [],
       buttonData: [
-        { class: 'selected', id: uuidv4() },
-        { class: '', id: uuidv4() },
-        { class: '', id: uuidv4() },
+        { class: 'selected', id: 'button-all' },
+        { class: '', id: 'button-active' },
+        { class: '', id: 'button-completed' },
       ],
 			taskEdit: {}
     };

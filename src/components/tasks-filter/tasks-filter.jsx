@@ -49,9 +49,9 @@ TasksFilter.defaultProps = {
   onClickCompleted: () => {},
   onClickAll: () => {},
   buttonSelected: [
-    { class: 'selected', id: 0 },
-    { class: '', id: 1 },
-    { class: '', id: 2 },
+    { class: 'selected', id: 'button-all' },
+    { class: '', id: 'button-active' },
+    { class: '', id: 'button-completed' },
   ],
 };
 
