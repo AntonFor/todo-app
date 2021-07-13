@@ -142,7 +142,7 @@ const App = () => {
   };
 
 	let interval;
-	let delta;
+	let delta = 0;
 
 	const workItemPlay = (id) => {
 		const startTime = Date.now();
