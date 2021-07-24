@@ -5,24 +5,34 @@ import './task.css';
 
 const Task = (props) => {
   const {
-    description, created, onClickTask, onClickDestroy, onClickEdit, view, id, completed, 
-		timeWork, sumTimeWork, onClickPlay, onClickPause
+    description,
+    created,
+    onClickTask,
+    onClickDestroy,
+    onClickEdit,
+    view,
+    id,
+    completed,
+    timeWork,
+    sumTimeWork,
+    onClickPlay,
+    onClickPause,
   } = props;
 
-	let checked = false;
-	checked = (completed === 'completed') ? true : false;
+  let checked = false;
+  checked = completed === 'completed';
 
-	let sumTime = timeWork + sumTimeWork;
+  const sumTime = timeWork + sumTimeWork;
 
-	function timeConverter(delta) {
-		let workTimeSeconds = parseInt((delta/1000)%60);
-			let workTimeMinutes = parseInt((delta/(1000*60))%60);
-			workTimeSeconds = (workTimeSeconds < 10) ? "0" + workTimeSeconds : workTimeSeconds;
-			workTimeMinutes = (workTimeMinutes < 10) ? "0" + workTimeMinutes : workTimeMinutes;
-			return `${workTimeMinutes}:${workTimeSeconds}`;
-	}
+  function timeConverter(delta) {
+    let workTimeSeconds = parseInt((delta / 1000) % 60, 10);
+    let workTimeMinutes = parseInt((delta / (1000 * 60)) % 60, 10);
+    workTimeSeconds = workTimeSeconds < 10 ? `0${workTimeSeconds}` : workTimeSeconds;
+    workTimeMinutes = workTimeMinutes < 10 ? `0${workTimeMinutes}` : workTimeMinutes;
+    return `${workTimeMinutes}:${workTimeSeconds}`;
+  }
 
-	const time = timeConverter(sumTime);
+  const time = timeConverter(sumTime);
 
   return (
     <div className={view}>
@@ -30,14 +40,14 @@ const Task = (props) => {
       <label htmlFor={id}>
         <span className="title">{description}</span>
         <span className="description">
-					<button className="icon icon-play" onClick={onClickPlay}></button>
-          <button className="icon icon-pause" onClick={onClickPause}></button>
+          <button type="button" aria-label="Mute volume" className="icon icon-play" onClick={onClickPlay} />
+          <button type="button" aria-label="Mute volume" className="icon icon-pause" onClick={onClickPause} />
           <span className="time">{time}</span>
-				</span>
-				<span className="description">{created}</span>
+        </span>
+        <span className="description">{created}</span>
       </label>
-      <button type="button" className="icon icon-edit" onClick={onClickEdit} />
-      <button type="button" className="icon icon-destroy" onClick={onClickDestroy} />
+      <button type="button" aria-label="Mute volume" className="icon icon-edit" onClick={onClickEdit} />
+      <button type="button" aria-label="Mute volume" className="icon icon-destroy" onClick={onClickDestroy} />
     </div>
   );
 };
@@ -50,6 +60,11 @@ Task.defaultProps = {
   onClickEdit: () => {},
   view: 'view',
   id: 0,
+  completed: '',
+  timeWork: 0,
+  sumTimeWork: 0,
+  onClickPlay: () => {},
+  onClickPause: () => {},
 };
 
 Task.propTypes = {
@@ -60,6 +75,11 @@ Task.propTypes = {
   onClickEdit: PropTypes.func,
   view: PropTypes.string,
   id: PropTypes.number,
+  completed: PropTypes.string,
+  timeWork: PropTypes.number,
+  sumTimeWork: PropTypes.number,
+  onClickPlay: PropTypes.func,
+  onClickPause: PropTypes.func,
 };
 
 export default Task;

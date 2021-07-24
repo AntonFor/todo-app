@@ -21,7 +21,7 @@ export default class App extends Component {
         { class: '', id: 'button-active' },
         { class: '', id: 'button-completed' },
       ],
-			taskEdit: {}
+      taskEdit: {},
     };
 
     this.status = {
@@ -39,8 +39,8 @@ export default class App extends Component {
         const oldItem = taskData[idx];
         const newItem = { ...oldItem, class: checkClass };
         const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-				localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				return {
+        localStorage.setItem('tasks', JSON.stringify(newTaskData));
+        return {
           taskData: newTaskData,
         };
       });
@@ -50,7 +50,7 @@ export default class App extends Component {
       this.setState(({ taskData }) => {
         const newTaskData = taskData.filter((el) => el.id !== id);
         localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				return {
+        return {
           taskData: newTaskData,
         };
       });
@@ -65,7 +65,7 @@ export default class App extends Component {
         const oldItem = taskData[idx];
         const newItem = { ...oldItem, class: checkClass };
         const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-				return {
+        return {
           taskData: newTaskData,
         };
       });
@@ -76,7 +76,7 @@ export default class App extends Component {
       const newItem = this.createItem(text, milsec);
       this.setState(({ taskData }) => {
         const newTaskData = [...taskData, newItem];
-				localStorage.setItem('tasks', JSON.stringify(newTaskData));
+        localStorage.setItem('tasks', JSON.stringify(newTaskData));
         return {
           taskData: newTaskData,
         };
@@ -85,11 +85,11 @@ export default class App extends Component {
 
     this.filtrationActiveItem = (id) => {
       this.setState(({ taskData }) => {
-        const oldTaskData = [...(taskData)];
+        const oldTaskData = [...taskData];
         const newTaskData = oldTaskData.map((el) => {
           const checkClass = classNames(
             { view: !(el.class === this.status.COMPLETED) },
-            { hidden: (el.class === this.status.COMPLETED) },
+            { hidden: el.class === this.status.COMPLETED }
           );
           const newItem = { ...el, view: checkClass };
           return newItem;
@@ -103,11 +103,11 @@ export default class App extends Component {
 
     this.filtrationCompletedItem = (id) => {
       this.setState(({ taskData }) => {
-        const oldTaskData = [...(taskData)];
+        const oldTaskData = [...taskData];
         const newTaskData = oldTaskData.map((el) => {
           const checkClass = classNames(
-            { view: (el.class === this.status.COMPLETED) },
-            { hidden: !(el.class === this.status.COMPLETED) },
+            { view: el.class === this.status.COMPLETED },
+            { hidden: !(el.class === this.status.COMPLETED) }
           );
           const newItem = { ...el, view: checkClass };
           return newItem;
@@ -121,7 +121,7 @@ export default class App extends Component {
 
     this.filtrationAllItem = (id) => {
       this.setState(({ taskData }) => {
-        const oldTaskData = [...(taskData)];
+        const oldTaskData = [...taskData];
         const newTaskData = oldTaskData.map((el) => {
           const newItem = { ...el, view: this.status.VIEW };
           return newItem;
@@ -135,19 +135,17 @@ export default class App extends Component {
 
     this.deleteCompletedItems = () => {
       this.setState(({ taskData }) => {
-        const oldTaskData = [...(taskData)];
+        const oldTaskData = [...taskData];
         const newTaskData = oldTaskData.filter((el) => el.class !== this.status.COMPLETED);
         localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				return {
+        return {
           taskData: newTaskData,
         };
       });
     };
 
     this.editTask = (text, id) => {
-      this.setState(
-        { taskEdit: { text, id } },
-      );
+      this.setState({ taskEdit: { text, id } });
     };
 
     this.eventEdit = ({ key }, id) => {
@@ -160,58 +158,57 @@ export default class App extends Component {
           const newItem = { ...oldItem, class: '', description: text };
           const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
           localStorage.setItem('tasks', JSON.stringify(newTaskData));
-					return {
+          return {
             taskData: newTaskData,
           };
         });
       }
     };
 
-		this.workItemPlay = (id) => {
-			const startTime = Date.now();
-			this.id = setInterval(() => {
-				this.delta = Date.now() - startTime;
-				this.setState(({ taskData }) => {
-					const idx = taskData.findIndex((el) => el.id === id);
-					const oldItem = taskData[idx];
-					const newItem = { ...oldItem, timeWorkTask: this.delta };
-					const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-					localStorage.setItem('tasks', JSON.stringify(newTaskData));
-					return {
-						taskData: newTaskData,
-					};
-				})
-			}, 1000);
-		}
+    this.workItemPlay = (id) => {
+      const startTime = Date.now();
+      this.id = setInterval(() => {
+        this.delta = Date.now() - startTime;
+        this.setState(({ taskData }) => {
+          const idx = taskData.findIndex((el) => el.id === id);
+          const oldItem = taskData[idx];
+          const newItem = { ...oldItem, timeWorkTask: this.delta };
+          const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
+          localStorage.setItem('tasks', JSON.stringify(newTaskData));
+          return {
+            taskData: newTaskData,
+          };
+        });
+      }, 1000);
+    };
 
-		this.workItemPause = (id) => {
-			this.setState(({ taskData }) => {
-				const idx = taskData.findIndex((el) => el.id === id);
-				const oldItem = taskData[idx];
-				const sumTime = oldItem.sumTimeWorkTask + this.delta;
-				const newItem = { ...oldItem, sumTimeWorkTask: sumTime, timeWorkTask: 0 };
-				const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-				localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				return {
-					taskData: newTaskData,
-				};
-			})
-			clearInterval(this.id);
-		}
+    this.workItemPause = (id) => {
+      this.setState(({ taskData }) => {
+        const idx = taskData.findIndex((el) => el.id === id);
+        const oldItem = taskData[idx];
+        const sumTime = oldItem.sumTimeWorkTask + this.delta;
+        const newItem = { ...oldItem, sumTimeWorkTask: sumTime, timeWorkTask: 0 };
+        const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
+        localStorage.setItem('tasks', JSON.stringify(newTaskData));
+        return {
+          taskData: newTaskData,
+        };
+      });
+      clearInterval(this.id);
+    };
   }
 
-	componentDidMount() {
-		const getTasks = localStorage.getItem('tasks');
-		const getTasksPars = JSON.parse(getTasks);
-		this.setState(({ taskData }) => {
-			return {
-				taskData: getTasksPars
-			}
-		})
+  componentDidMount() {
+    const getTasks = localStorage.getItem('tasks');
+    const getTasksPars = JSON.parse(getTasks);
+    this.setState({
+      taskData: getTasksPars,
+    });
   }
 
-	componentWillUnmount() {
-    localStorage.setItem('tasks', JSON.stringify(this.state.taskData));
+  componentWillUnmount() {
+    const { taskData } = this.state;
+    localStorage.setItem('tasks', JSON.stringify(taskData));
   }
 
   createItem(description, milsec) {
@@ -221,19 +218,16 @@ export default class App extends Component {
       view: 'view',
       created: formatDistanceToNow(new Date(), { includeSeconds: true }),
       id: uuidv4(),
-			timeWorkTask: 0,
-			sumTimeWorkTask: milsec
+      timeWorkTask: 0,
+      sumTimeWorkTask: milsec,
     };
   }
 
-	selectedButton(idx) {
+  selectedButton(idx) {
     this.setState(({ buttonData }) => {
-      const oldButtonData = [...(buttonData)];
+      const oldButtonData = [...buttonData];
       const newButtonData = oldButtonData.map((el) => {
-        const checkClass = classNames(
-          { selected: (el.id === idx) },
-          { '': !(el.id === idx) },
-        );
+        const checkClass = classNames({ selected: el.id === idx }, { '': !(el.id === idx) });
         const newItem = { ...el, class: checkClass };
         return newItem;
       });
@@ -242,7 +236,7 @@ export default class App extends Component {
       };
     });
   }
-	
+
   render() {
     const { taskData } = this.state;
     const { taskEdit } = this.state;
@@ -259,8 +253,8 @@ export default class App extends Component {
             changeEditTask={this.editTask}
             handlingEventEdit={this.eventEdit}
             value={taskEdit}
-						workTaskPlay={this.workItemPlay}
-						workTaskPause={this.workItemPause}
+            workTaskPlay={this.workItemPlay}
+            workTaskPause={this.workItemPause}
           />
           <Footer
             tasks={taskData}

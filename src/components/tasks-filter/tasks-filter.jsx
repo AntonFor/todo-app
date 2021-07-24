@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import './tasks-filter.css';
 
 const TasksFilter = (props) => {
-  const {
-    onClickActive, onClickCompleted, onClickAll, buttonSelected,
-  } = props;
+  const { onClickActive, onClickCompleted, onClickAll, buttonSelected } = props;
 
   return (
     <ul className="filters">

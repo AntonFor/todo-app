@@ -5,9 +5,16 @@ import Task from '../task';
 import './task-list.css';
 
 const TaskList = (props) => {
-	const {
-    tasks, completedTask, deleteTask, editTask, changeEditTask, handlingEventEdit, value,
-		workTaskPlay, workTaskPause
+  const {
+    tasks,
+    completedTask,
+    deleteTask,
+    editTask,
+    changeEditTask,
+    handlingEventEdit,
+    value,
+    workTaskPlay,
+    workTaskPause,
   } = props;
   const { text, id } = value;
 
@@ -25,11 +32,11 @@ const TaskList = (props) => {
           onClickEdit={() => editTask(item.id)}
           view={item.view}
           id={item.id}
-					completed={item.class}
-					timeWork={item.timeWorkTask}
-					sumTimeWork={item.sumTimeWorkTask}
-					onClickPlay={() => workTaskPlay(item.id)}
-					onClickPause={() => workTaskPause(item.id)}
+          completed={item.class}
+          timeWork={item.timeWorkTask}
+          sumTimeWork={item.sumTimeWorkTask}
+          onClickPlay={() => workTaskPlay(item.id)}
+          onClickPause={() => workTaskPause(item.id)}
         />
         <input
           key={item.id}
@@ -44,7 +51,7 @@ const TaskList = (props) => {
     );
   });
 
-	const message = <div className="massage">There's no task yet</div>
+  const message = <div className="massage">There&apos;s no task yet</div>;
 
   return <ul className="todo-list">{tasks.length === 0 ? message : elements}</ul>;
 };
@@ -57,6 +64,8 @@ TaskList.defaultProps = {
   changeEditTask: () => {},
   handlingEventEdit: () => {},
   value: { text: '', id: null },
+  workTaskPlay: () => {},
+  workTaskPause: () => {},
 };
 
 TaskList.propTypes = {
@@ -67,6 +76,8 @@ TaskList.propTypes = {
   changeEditTask: PropTypes.func,
   handlingEventEdit: PropTypes.func,
   value: PropTypes.objectOf(PropTypes.object),
+  workTaskPlay: PropTypes.func,
+  workTaskPause: PropTypes.func,
 };
 
 export default TaskList;
