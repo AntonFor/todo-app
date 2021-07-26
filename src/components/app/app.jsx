@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +38,8 @@ const App = () => {
       const newItem = { ...oldItem, class: checkClass };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
   };
 
@@ -43,7 +47,8 @@ const App = () => {
 		setTaskData((taskData) => {
 			const newTaskData = taskData.filter((el) => el.id !== id);
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
   };
 
@@ -56,9 +61,20 @@ const App = () => {
       const oldItem = taskData[idx];
       const newItem = { ...oldItem, class: checkClass };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
 	};
+
+	const createItem = (description, milsec) => ({
+    class: '',
+    description,
+    view: 'view',
+    created: formatDistanceToNow(new Date(), { includeSeconds: true }),
+    id: uuidv4(),
+		timeWorkTask: 0,
+		sumTimeWorkTask: milsec
+  })
 
   const addItem = (text, milsec) => {
     if (text.length === 0) return;
@@ -66,9 +82,26 @@ const App = () => {
     setTaskData((taskData) => {
 			const newTaskData = [...taskData, newItem];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-      return taskData = newTaskData;
+      taskData = newTaskData;
+			return taskData;
 		});
   };
+
+	const selectedButton = (idx) => {
+		setButtonData((buttonData) => {
+			const oldButtonData = [...(buttonData)];
+      const newButtonData = oldButtonData.map((el) => {
+        const checkClass = classNames(
+          { selected: (el.id === idx) },
+          { '': !(el.id === idx) },
+        );
+        const newItem = { ...el, class: checkClass };
+        return newItem;
+      });
+			buttonData = newButtonData;
+      return buttonData;
+		})
+  }
 
 	const filtrationActiveItem = (id) => {
 		setTaskData((taskData) => {
@@ -81,7 +114,8 @@ const App = () => {
         const newItem = { ...el, view: checkClass };
         return newItem;
       });
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
     selectedButton(id);
   };
@@ -97,7 +131,8 @@ const App = () => {
 				const newItem = { ...el, view: checkClass };
         return newItem;
       });
-      return taskData = newTaskData;
+      taskData = newTaskData;
+			return taskData;
 		});
     selectedButton(id);
   };
@@ -109,7 +144,8 @@ const App = () => {
       const newItem = { ...el, view: status.VIEW };
         return newItem;
       });
-      return taskData = newTaskData;
+      taskData = newTaskData;
+			return taskData;
 		});
 		selectedButton(id);
   };
@@ -119,7 +155,8 @@ const App = () => {
 			const oldTaskData = [...(taskData)];
       const newTaskData = oldTaskData.filter((el) => el.class !== status.COMPLETED);
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
   };
 
@@ -136,7 +173,8 @@ const App = () => {
       const newItem = { ...oldItem, class: '', description: text };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
     }
   };
@@ -154,7 +192,8 @@ const App = () => {
 				const newItem = { ...oldItem, timeWorkTask: delta };
 				const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 				localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				return taskData = newTaskData;
+				taskData = newTaskData;
+				return taskData;
 			});
 		}, 1000);
 	}
@@ -167,7 +206,8 @@ const App = () => {
 			const newItem = { ...oldItem, sumTimeWorkTask: sumTime, timeWorkTask: 0 };
 			const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			return taskData = newTaskData;
+			taskData = newTaskData;
+			return taskData;
 		});
 		clearInterval(interval);
 	}
@@ -175,36 +215,12 @@ const App = () => {
 	useEffect(() => {
 		const getTasks = localStorage.getItem('tasks');
 		const getTasksPars = JSON.parse(getTasks);
-		setTaskData((taskData) => taskData = getTasksPars);
+		setTaskData((taskData) => {
+			taskData = getTasksPars;
+			return taskData;
+		});
 		return () => {localStorage.setItem('tasks', JSON.stringify(taskData));}
 	}, []);
-
-  const createItem = (description, milsec) => {
-    return {
-      class: '',
-      description,
-      view: 'view',
-      created: formatDistanceToNow(new Date(), { includeSeconds: true }),
-      id: uuidv4(),
-			timeWorkTask: 0,
-			sumTimeWorkTask: milsec
-    };
-  }
-
-	const selectedButton = (idx) => {
-		setButtonData((buttonData) => {
-			const oldButtonData = [...(buttonData)];
-      const newButtonData = oldButtonData.map((el) => {
-        const checkClass = classNames(
-          { selected: (el.id === idx) },
-          { '': !(el.id === idx) },
-        );
-        const newItem = { ...el, class: checkClass };
-        return newItem;
-      });
-      return buttonData = newButtonData;
-		})
-  }
 	
   return (
     <section className="todoapp">

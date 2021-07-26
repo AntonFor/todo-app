@@ -44,7 +44,7 @@ const TaskList = (props) => {
     );
   });
 
-	const message = <div className="massage">There's no task yet</div>
+	const message = <div className="massage">There&apos;s no task yet</div>
 
   return <ul className="todo-list">{tasks.length === 0 ? message : elements}</ul>;
 };
@@ -57,6 +57,8 @@ TaskList.defaultProps = {
   changeEditTask: () => {},
   handlingEventEdit: () => {},
   value: { text: '', id: null },
+	workTaskPlay: () => {},
+	workTaskPause: () => {},
 };
 
 TaskList.propTypes = {
@@ -67,6 +69,8 @@ TaskList.propTypes = {
   changeEditTask: PropTypes.func,
   handlingEventEdit: PropTypes.func,
   value: PropTypes.objectOf(PropTypes.object),
+	workTaskPlay: PropTypes.func,
+	workTaskPause: PropTypes.func,
 };
 
 export default TaskList;

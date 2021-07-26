@@ -17,7 +17,6 @@ export default class NewTaskForm extends Component {
 		if (target.id === '1') this.setState({ textNewTask: target.value })
 		else if (target.id === '2') this.setState({ minNewTask: target.value })
 		else if (target.id === '3') this.setState({ secNewTask: target.value })
-		else return;
   };
 
   render() {
@@ -51,7 +50,7 @@ export default class NewTaskForm extends Component {
 					/>
 					<input
 					id={2}
-					class="new-todo-form__timer"
+					className="new-todo-form__timer"
 					placeholder="Min"
 					onChange={(event) => this.changeNewTask(event.target)}
 					onKeyDown={(event) => handlingEvent(event)}
@@ -59,7 +58,7 @@ export default class NewTaskForm extends Component {
 					/>
           <input
 					id={3}
-					class="new-todo-form__timer"
+					className="new-todo-form__timer"
 					placeholder="Sec"
 					onChange={(event) => this.changeNewTask(event.target)}
 					onKeyDown={(event) => handlingEvent(event)}

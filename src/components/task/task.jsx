@@ -10,15 +10,15 @@ const Task = (props) => {
   } = props;
 
 	let checked = false;
-	checked = (completed === 'completed') ? true : false;
+	checked = (completed === 'completed');
 
-	let sumTime = timeWork + sumTimeWork;
+	const sumTime = timeWork + sumTimeWork;
 
 	function timeConverter(delta) {
-		let workTimeSeconds = parseInt((delta/1000)%60);
-			let workTimeMinutes = parseInt((delta/(1000*60))%60);
-			workTimeSeconds = (workTimeSeconds < 10) ? "0" + workTimeSeconds : workTimeSeconds;
-			workTimeMinutes = (workTimeMinutes < 10) ? "0" + workTimeMinutes : workTimeMinutes;
+		let workTimeSeconds = parseInt((delta/1000)%60, 10);
+			let workTimeMinutes = parseInt((delta/(1000*60))%60, 10);
+			workTimeSeconds = (workTimeSeconds < 10) ? `0${  workTimeSeconds}` : workTimeSeconds;
+			workTimeMinutes = (workTimeMinutes < 10) ? `0${  workTimeMinutes}` : workTimeMinutes;
 			return `${workTimeMinutes}:${workTimeSeconds}`;
 	}
 
@@ -30,8 +30,8 @@ const Task = (props) => {
       <label htmlFor={id}>
         <span className="title">{description}</span>
         <span className="description">
-					<button className="icon icon-play" onClick={onClickPlay}></button>
-          <button className="icon icon-pause" onClick={onClickPause}></button>
+					<button className="icon icon-play" onClick={onClickPlay} />
+          <button className="icon icon-pause" onClick={onClickPause} />
           <span className="time">{time}</span>
 				</span>
 				<span className="description">{created}</span>
@@ -50,6 +50,11 @@ Task.defaultProps = {
   onClickEdit: () => {},
   view: 'view',
   id: 0,
+	completed: '',
+	timeWork: 0,
+	sumTimeWork: 0,
+	onClickPlay: () => {},
+	onClickPause: () => {},
 };
 
 Task.propTypes = {
@@ -60,6 +65,11 @@ Task.propTypes = {
   onClickEdit: PropTypes.func,
   view: PropTypes.string,
   id: PropTypes.number,
+	completed: PropTypes.string,
+	timeWork: PropTypes.number,
+	sumTimeWork: PropTypes.number,
+	onClickPlay: PropTypes.func,
+	onClickPause: PropTypes.func,
 };
 
 export default Task;
