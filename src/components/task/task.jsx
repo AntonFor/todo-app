@@ -30,14 +30,14 @@ const Task = (props) => {
       <label htmlFor={id}>
         <span className="title">{description}</span>
         <span className="description">
-					<button className="icon icon-play" onClick={onClickPlay} />
-          <button className="icon icon-pause" onClick={onClickPause} />
+					<button className="icon icon-play" type="button" aria-label="Mute volume" onClick={onClickPlay} />
+          <button className="icon icon-pause" type="button" aria-label="Mute volume" onClick={onClickPause} />
           <span className="time">{time}</span>
 				</span>
 				<span className="description">{created}</span>
       </label>
-      <button type="button" className="icon icon-edit" onClick={onClickEdit} />
-      <button type="button" className="icon icon-destroy" onClick={onClickDestroy} />
+      <button type="button" aria-label="Mute volume" className="icon icon-edit" onClick={onClickEdit} />
+      <button type="button" aria-label="Mute volume" className="icon icon-destroy" onClick={onClickDestroy} />
     </div>
   );
 };

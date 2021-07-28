@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-shadow */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,8 @@ const App = () => {
     { class: '', id: 'button-completed' }
 	]);
 	const [taskEdit, setTaskEdit] = useState({});
+	const [intervalTemp, setIntervalTemp] = useState();
+	// const [delta, setDelta] = useState(0);
 
   const status = {
     COMPLETED: 'completed',
@@ -179,23 +181,30 @@ const App = () => {
     }
   };
 
-	let interval;
 	let delta = 0;
 
 	const workItemPlay = (id) => {
 		const startTime = Date.now();
-		interval = setInterval(() => {
-			delta = Date.now() - startTime;
-			setTaskData((taskData) => {
-				const idx = taskData.findIndex((el) => el.id === id);
-				const oldItem = taskData[idx];
-				const newItem = { ...oldItem, timeWorkTask: delta };
-				const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-				localStorage.setItem('tasks', JSON.stringify(newTaskData));
-				taskData = newTaskData;
-				return taskData;
-			});
-		}, 1000);
+		setIntervalTemp((intervalTemp) => {
+			const interval = setInterval(() => {
+				delta = Date.now() - startTime;
+				// setDelta((delta) => {
+				//	delta = Date.now() - startTime;
+				//	return delta;
+				// });
+				setTaskData((taskData) => {
+					const idx = taskData.findIndex((el) => el.id === id);
+					const oldItem = taskData[idx];
+					const newItem = { ...oldItem, timeWorkTask: delta };
+					const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
+					localStorage.setItem('tasks', JSON.stringify(newTaskData));
+					taskData = newTaskData;
+					return taskData;
+				});
+			}, 1000);
+			intervalTemp = interval;
+			return intervalTemp;
+		});
 	}
 
 	const workItemPause = (id) => {
@@ -209,7 +218,7 @@ const App = () => {
 			taskData = newTaskData;
 			return taskData;
 		});
-		clearInterval(interval);
+		clearInterval(intervalTemp);
 	}
 
 	useEffect(() => {
