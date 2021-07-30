@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
@@ -14,15 +12,15 @@ import './app.css';
 const classNames = require('classnames');
 
 const App = () => {
-	const [taskData, setTaskData] = useState([]);
-	const [buttonData, setButtonData] = useState([
+	const [currentTasks, setTaskData] = useState([]);
+	const [currenButton, setButtonData] = useState([
 		{ class: 'selected', id: 'button-all' },
     { class: '', id: 'button-active' },
     { class: '', id: 'button-completed' }
 	]);
 	const [taskEdit, setTaskEdit] = useState({});
-	const [intervalTemp, setIntervalTemp] = useState();
-	// const [delta, setDelta] = useState(0);
+	const [currentInterval, setIntervalTemp] = useState();
+	const [delta, setDelta] = useState(0);
 
   const status = {
     COMPLETED: 'completed',
@@ -40,8 +38,7 @@ const App = () => {
       const newItem = { ...oldItem, class: checkClass };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
   };
 
@@ -49,8 +46,7 @@ const App = () => {
 		setTaskData((taskData) => {
 			const newTaskData = taskData.filter((el) => el.id !== id);
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
   };
 
@@ -63,8 +59,7 @@ const App = () => {
       const oldItem = taskData[idx];
       const newItem = { ...oldItem, class: checkClass };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
 	};
 
@@ -84,8 +79,7 @@ const App = () => {
     setTaskData((taskData) => {
 			const newTaskData = [...taskData, newItem];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-      taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
   };
 
@@ -100,8 +94,7 @@ const App = () => {
         const newItem = { ...el, class: checkClass };
         return newItem;
       });
-			buttonData = newButtonData;
-      return buttonData;
+			return newButtonData;
 		})
   }
 
@@ -116,8 +109,7 @@ const App = () => {
         const newItem = { ...el, view: checkClass };
         return newItem;
       });
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
     selectedButton(id);
   };
@@ -133,8 +125,7 @@ const App = () => {
 				const newItem = { ...el, view: checkClass };
         return newItem;
       });
-      taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
     selectedButton(id);
   };
@@ -146,8 +137,7 @@ const App = () => {
       const newItem = { ...el, view: status.VIEW };
         return newItem;
       });
-      taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
 		selectedButton(id);
   };
@@ -157,8 +147,7 @@ const App = () => {
 			const oldTaskData = [...(taskData)];
       const newTaskData = oldTaskData.filter((el) => el.class !== status.COMPLETED);
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
   };
 
@@ -175,35 +164,27 @@ const App = () => {
       const newItem = { ...oldItem, class: '', description: text };
       const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
       localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
     }
   };
 
-	let delta = 0;
-
 	const workItemPlay = (id) => {
 		const startTime = Date.now();
-		setIntervalTemp((intervalTemp) => {
+		setIntervalTemp(() => {
 			const interval = setInterval(() => {
-				delta = Date.now() - startTime;
-				// setDelta((delta) => {
-				//	delta = Date.now() - startTime;
-				//	return delta;
-				// });
+				setDelta(() => (Date.now() - startTime));
 				setTaskData((taskData) => {
+					console.log(delta);
 					const idx = taskData.findIndex((el) => el.id === id);
 					const oldItem = taskData[idx];
 					const newItem = { ...oldItem, timeWorkTask: delta };
 					const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 					localStorage.setItem('tasks', JSON.stringify(newTaskData));
-					taskData = newTaskData;
-					return taskData;
+					return newTaskData;
 				});
 			}, 1000);
-			intervalTemp = interval;
-			return intervalTemp;
+			return interval;
 		});
 	}
 
@@ -215,20 +196,18 @@ const App = () => {
 			const newItem = { ...oldItem, sumTimeWorkTask: sumTime, timeWorkTask: 0 };
 			const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 			localStorage.setItem('tasks', JSON.stringify(newTaskData));
-			taskData = newTaskData;
-			return taskData;
+			return newTaskData;
 		});
-		clearInterval(intervalTemp);
+		clearInterval(currentInterval);
 	}
 
 	useEffect(() => {
-		const getTasks = localStorage.getItem('tasks');
-		const getTasksPars = JSON.parse(getTasks);
-		setTaskData((taskData) => {
-			taskData = getTasksPars;
-			return taskData;
+		setTaskData(() => {
+			const getTasks = localStorage.getItem('tasks');
+			const getTasksPars = JSON.parse(getTasks);
+			return getTasksPars;
 		});
-		return () => {localStorage.setItem('tasks', JSON.stringify(taskData));}
+		return () => {localStorage.setItem('tasks', JSON.stringify(currentTasks));}
 	}, []);
 	
   return (
@@ -236,7 +215,7 @@ const App = () => {
       <NewTaskForm addTask={addItem} />
       <section className="main">
         <TaskList
-          tasks={taskData}
+          tasks={currentTasks}
           completedTask={completedItem}
           deleteTask={deleteItem}
           editTask={editItem}
@@ -247,11 +226,11 @@ const App = () => {
 					workTaskPause={workItemPause}
         />
         <Footer
-          tasks={taskData}
+          tasks={currentTasks}
           filtrationActiveTask={filtrationActiveItem}
           filtrationCompletedTask={filtrationCompletedItem}
           filtrationAllTask={filtrationAllItem}
-          buttons={buttonData}
+          buttons={currenButton}
           deleteCompletedTasks={deleteCompletedItems}
         />
       </section>
