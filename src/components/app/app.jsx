@@ -173,12 +173,12 @@ const App = () => {
 		const startTime = Date.now();
 		setIntervalTemp(() => {
 			const interval = setInterval(() => {
-				setDelta(() => (Date.now() - startTime));
+				const newDelta = Date.now() - startTime;
+				setDelta(() => newDelta);
 				setTaskData((taskData) => {
-					console.log(delta);
 					const idx = taskData.findIndex((el) => el.id === id);
 					const oldItem = taskData[idx];
-					const newItem = { ...oldItem, timeWorkTask: delta };
+					const newItem = { ...oldItem, timeWorkTask: newDelta };
 					const newTaskData = [...taskData.slice(0, idx), newItem, ...taskData.slice(idx + 1)];
 					localStorage.setItem('tasks', JSON.stringify(newTaskData));
 					return newTaskData;
