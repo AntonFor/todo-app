@@ -1,79 +1,75 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable import/no-cycle */
+import React, { useState, useContext } from 'react';
+// import PropTypes from 'prop-types';
+import { MyContext } from '../app/app';
 
 import './new-task-form.css';
 
-export default class NewTaskForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      textNewTask: '',
-			minNewTask: '',
-			secNewTask: ''
-    };
-  }
+const NewTaskForm = () => {
+	const properties = useContext(MyContext);
 
-  changeNewTask = (target) => {
-		if (target.id === '1') this.setState({ textNewTask: target.value })
-		else if (target.id === '2') this.setState({ minNewTask: target.value })
-		else if (target.id === '3') this.setState({ secNewTask: target.value })
+	const [currentTextNewTask, setTextNewTask] = useState('');
+	const [currentMinNewTask, setMinNewTask] = useState('');
+	const [currentSecNewTask, setSecNewTask] = useState('');
+
+  const changeNewTask = (target) => {
+		if (target.id === '1') setTextNewTask(target.value)
+		else if (target.id === '2') setMinNewTask(target.value)
+		else if (target.id === '3') setSecNewTask(target.value)
   };
 
-  render() {
-    const { addTask } = this.props;
-    const { textNewTask, minNewTask, secNewTask } = this.state;
+  const { addTask } = properties;
 
-    const handlingEvent = ({ key }) => {
-			if (key === 'Enter') {
-				const milsecNewTask = (Number(minNewTask) * 60 * 1000) + (Number(secNewTask) * 1000)
-				if (Number(minNewTask) > 59 || Number(secNewTask) > 59) return;
-				addTask(textNewTask, milsecNewTask);
-        this.setState({
-					textNewTask: '',
-					minNewTask: '',
-					secNewTask: ''
-				});
-      }
-    };
+  const handlingEvent = ({ key }) => {
+		if (key === 'Enter') {
+			const milsecNewTask = (Number(currentMinNewTask) * 60 * 1000) + (Number(currentSecNewTask) * 1000);
+			if (Number(currentMinNewTask) > 59 || Number(currentSecNewTask) > 59) return;
+			addTask(currentTextNewTask, milsecNewTask);
+      setTextNewTask('');
+			setMinNewTask('');
+			setSecNewTask('');
+    }
+  };
 
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        <form className="new-todo-form">
-					<input
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      <form className="new-todo-form">
+				<input
 					id={1}
-          className="new-todo"
-          placeholder="Task"
-          onChange={(event) => this.changeNewTask(event.target)}
-          onKeyDown={(event) => handlingEvent(event)}
-          value={textNewTask}
-					/>
-					<input
+					className="new-todo"
+					placeholder="Task"
+					onChange={(event) => changeNewTask(event.target)}
+					onKeyDown={(event) => handlingEvent(event)}
+					value={currentTextNewTask}
+				/>
+				<input
 					id={2}
 					className="new-todo-form__timer"
 					placeholder="Min"
-					onChange={(event) => this.changeNewTask(event.target)}
+					onChange={(event) => changeNewTask(event.target)}
 					onKeyDown={(event) => handlingEvent(event)}
-					value={minNewTask}
-					/>
-          <input
+					value={currentMinNewTask}
+				/>
+        <input
 					id={3}
 					className="new-todo-form__timer"
 					placeholder="Sec"
-					onChange={(event) => this.changeNewTask(event.target)}
+					onChange={(event) => changeNewTask(event.target)}
 					onKeyDown={(event) => handlingEvent(event)}
-					value={secNewTask}
-					/>
-				</form>
-      </header>
-    );
-  }
+					value={currentSecNewTask}
+				/>
+			</form>
+    </header>
+  );
 }
 
 NewTaskForm.defaultProps = {
   addTask: () => {},
 };
 
-NewTaskForm.propTypes = {
-  addTask: PropTypes.func,
-};
+// NewTaskForm.propTypes = {
+//  addTask: PropTypes.func,
+// };
+
+export default NewTaskForm;

@@ -1,13 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable import/no-cycle */
+import React, {useContext} from 'react';
+// import PropTypes from 'prop-types';
+import { MyContextTask } from '../task-list/task-list';
 
 import './task.css';
 
-const Task = (props) => {
+const Task = () => {
+	const propertiesTask = useContext(MyContextTask);
   const {
     description, created, onClickTask, onClickDestroy, onClickEdit, view, id, completed, 
 		timeWork, sumTimeWork, onClickPlay, onClickPause
-  } = props;
+  } = propertiesTask;
 
 	let checked = false;
 	checked = (completed === 'completed');
@@ -57,19 +60,19 @@ Task.defaultProps = {
 	onClickPause: () => {},
 };
 
-Task.propTypes = {
-  description: PropTypes.string,
-  created: PropTypes.string,
-  onClickTask: PropTypes.func,
-  onClickDestroy: PropTypes.func,
-  onClickEdit: PropTypes.func,
-  view: PropTypes.string,
-  id: PropTypes.number,
-	completed: PropTypes.string,
-	timeWork: PropTypes.number,
-	sumTimeWork: PropTypes.number,
-	onClickPlay: PropTypes.func,
-	onClickPause: PropTypes.func,
-};
+// Task.propTypes = {
+//  description: PropTypes.string,
+//  created: PropTypes.string,
+//  onClickTask: PropTypes.func,
+//  onClickDestroy: PropTypes.func,
+//  onClickEdit: PropTypes.func,
+//  view: PropTypes.string,
+//  id: PropTypes.number,
+//	completed: PropTypes.string,
+//	timeWork: PropTypes.number,
+//	sumTimeWork: PropTypes.number,
+//	onClickPlay: PropTypes.func,
+//	onClickPause: PropTypes.func,
+// };
 
 export default Task;

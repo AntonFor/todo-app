@@ -1,12 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable import/no-cycle */
+import React, { useContext} from 'react';
+// import PropTypes from 'prop-types';
+import { MyContext } from '../app/app';
 
 import './tasks-filter.css';
 
-const TasksFilter = (props) => {
+const TasksFilter = () => {
+	const properties = useContext(MyContext);
   const {
-    onClickActive, onClickCompleted, onClickAll, buttonSelected,
-  } = props;
+    filtrationActiveTask: onClickActive, filtrationCompletedTask: onClickCompleted, filtrationAllTask: onClickAll, buttons: buttonSelected,
+  } = properties;
 
   return (
     <ul className="filters">
@@ -55,11 +58,11 @@ TasksFilter.defaultProps = {
   ],
 };
 
-TasksFilter.propTypes = {
-  onClickActive: PropTypes.func,
-  onClickCompleted: PropTypes.func,
-  onClickAll: PropTypes.func,
-  buttonSelected: PropTypes.arrayOf(PropTypes.object),
-};
+// TasksFilter.propTypes = {
+//  onClickActive: PropTypes.func,
+//  onClickCompleted: PropTypes.func,
+//  onClickAll: PropTypes.func,
+//  buttonSelected: PropTypes.arrayOf(PropTypes.object),
+// };
 
 export default TasksFilter;

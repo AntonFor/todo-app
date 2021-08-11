@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-cycle */
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +11,8 @@ import Footer from '../footer';
 import './app.css';
 
 const classNames = require('classnames');
+
+export const MyContext = React.createContext();
 
 const App = () => {
 	const [currentTasks, setTaskData] = useState([]);
@@ -209,32 +212,36 @@ const App = () => {
 		});
 		return () => {localStorage.setItem('tasks', JSON.stringify(currentTasks));}
 	}, []);
+
+	const properties = {
+		tasks: currentTasks,
+		filtrationActiveTask: filtrationActiveItem,
+		filtrationCompletedTask: filtrationCompletedItem,
+		filtrationAllTask: filtrationAllItem,
+		buttons: currenButton,
+		deleteCompletedTasks: deleteCompletedItems,
+		completedTask: completedItem,
+		deleteTask: deleteItem,
+		editTask: editItem,
+		changeEditTask: editTask,
+		handlingEventEdit: eventEdit,
+		value: taskEdit,
+		workTaskPlay: workItemPlay,
+		workTaskPause: workItemPause,
+		addTask: addItem
+	}
 	
   return (
-    <section className="todoapp">
-      <NewTaskForm addTask={addItem} />
-      <section className="main">
-        <TaskList
-          tasks={currentTasks}
-          completedTask={completedItem}
-          deleteTask={deleteItem}
-          editTask={editItem}
-          changeEditTask={editTask}
-          handlingEventEdit={eventEdit}
-          value={taskEdit}
-					workTaskPlay={workItemPlay}
-					workTaskPause={workItemPause}
-        />
-        <Footer
-          tasks={currentTasks}
-          filtrationActiveTask={filtrationActiveItem}
-          filtrationCompletedTask={filtrationCompletedItem}
-          filtrationAllTask={filtrationAllItem}
-          buttons={currenButton}
-          deleteCompletedTasks={deleteCompletedItems}
-        />
-      </section>
-		</section>
+		<MyContext.Provider value={properties}>
+			<section className="todoapp">
+				<NewTaskForm />
+				<section className="main">
+					<TaskList	/>
+					<Footer	/>
+				</section>
+			</section>
+		</MyContext.Provider>
+    
   );
 }
 
